@@ -11,31 +11,37 @@ interface IFormInput {
     name: string;
     email: string;
     comment: string;
-}
-
-interface Props {
+  }
+  
+  interface Props {
     post: Post;
-}
-
-const Post = ({ post }: Props) => {
+  }
+  
+  function Post({ post }: Props) {
     const [submitted, setSubmitted] = useState(false);
-    // console.log(post);
-    const {register, handleSubmit, formState: {errors}} = useForm();
-
+  
+    console.log(post);
+  
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm<IFormInput>();
+  
     const onSubmit: SubmitHandler<IFormInput> = (data) => {
-        fetch("/api/createComment", {
-          method: "POST",
-          body: JSON.stringify(data),
+      fetch("/api/createComment", {
+        method: "POST",
+        body: JSON.stringify(data),
+      })
+        .then(() => {
+          console.log(data);
+          setSubmitted(true);
         })
-          .then(() => {
-            console.log(data);
-            setSubmitted(true);
-          })
-          .catch((err) => {
-            console.log(err);
-            setSubmitted(false);
-          });
-      };
+        .catch((err) => {
+          console.log(err);
+          setSubmitted(false);
+        });
+    };
 
   return (
     <main>
@@ -96,7 +102,7 @@ const Post = ({ post }: Props) => {
         </div>
       ) : (
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit) }
           className="flex flex-col p-5 max-w-2xl mx-auto mb-10"
         >
           <h3 className="text-sm text-yellow-500">Enjoyed this article?</h3>
